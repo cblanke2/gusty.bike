@@ -11,6 +11,8 @@
 
 * The navigation bar across the top of the page makes it easy to reach the tools requiered to add and edit pages.
 
+* Add text, image carousels, embedded videos, and so on, onto a page using the side bar while in edit mode.
+
 
 
 ### Creating Blog Posts:
