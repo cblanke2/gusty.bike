@@ -55,5 +55,5 @@
   * 4 - Fill in all desired information, and select _Save And Continue Editing_
   * 5 - Select advanced settings on the footer of the popup window
   * 6 - In the _Redirect_ field, enter the URL for the page to Redirect to
-    * 6.1 - For Mooshak, the redirect would be "gusty.bike/mooshak"
+    * 6.1 - For Mooshak, the redirect would be "http://gusty.bike/mooshak"
   * 7 - Select _Save_ and hit _Publish Page Now_ in the toolbar
