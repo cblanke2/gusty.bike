@@ -1,0 +1,11 @@
+[Unit]
+Description= Script that initializes the website system on startup.
+
+[Service]
+Type=simple
+User=root
+ExecStart=/gusty.bike/scripts/start.sh
+
+
+[Install]
+WantedBy=multi-user.target
