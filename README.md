@@ -48,7 +48,6 @@
 
 ### Adding Links to the Navigation Bar
 * To add a link to an external website, or to an additional program such as Mooshak, follow these steps:
-  * Log in as admin
   * 1 - Log in to the administrator account
   * 2 - Select _Page_ from the toolbar
   * 3 - Select _Create Page_ and then _New Page_ from the dropdown menu
