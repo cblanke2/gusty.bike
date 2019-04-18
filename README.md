@@ -13,6 +13,15 @@
 
 * Add text, image carousels, embedded videos, and so on, onto a page using the side bar while in edit mode.
 
+### Creating an Image Slider
+* To create an image carousel, simply follow these instructions:
+  * 1 - Log in to the administrator account
+  * 2 - Select the content sidebar from the toolbar
+  * 3 - Click the add button next to _Content_ and select _Carosuel_ under Bootstrap 4
+  * 4 - Change any desired options and click _Save_
+  * 5 - Select _NewsBlog_ from the _Application_ options dropdown menu
+  * 6 - Click the add button next to _Carosuel_ and select _Carousel slide_ under Bootstrap 4
+  * 7 - Select or upload an image using the pop up window, modify any desired options, and click _Save_
 
 ### Initializing The Blog
 
@@ -21,7 +30,7 @@
   * 2 - Select _Create_ from the toolbar
   * 3 - Select _New Page_ from the pop up menu
   * 4 - Once the page has been created, select _Advanced Settings_ from the _Page_ dropdown menu
-  * 5 - Select _NewsBlog_ from the _Application_ options dropdown menu
+  * 5 - Select _NewsBlog_ from the _Application_ options dropdown menu and click _Save_
 
 ### Creating Blog Posts:
 
@@ -31,7 +40,7 @@
   * The published site will not show unpublished posts are not visible to the public, only administrators
 
 * If the user wishes to create a blog post they follow these steps:
-	* 1 - Log in as admin
+  * 1 - Log in as admin
   * 2 - Navigate to blog page
   * 3 - Select "Create" from toolbar
   * 4 - Select "New news/blog article" form options pop-up menu
