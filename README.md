@@ -19,6 +19,7 @@
   * 5 - Select _NewsBlog_ from the _Application_ options dropdown menu
   * 6 - Click the add button next to _Carosuel_ and select _Carousel slide_ under Bootstrap 4
   * 7 - Select or upload an image using the pop up window, modify any desired options, and click _Save_
+* It is worth noting the Carousel will automatically resize itself to display the largest slide given to it, and also upscale smaller content
 
 ### Initializing The Blog
 * To initialize the blog page, simply follow these instructions:
