@@ -14,6 +14,14 @@
 * Add text, image carousels, embedded videos, and so on, onto a page using the side bar while in edit mode.
 
 
+### Initializing The Blog
+
+* To initialize the blog page, simply follow these instructions:
+  * 1 - Log in to the administrator account
+  * 2 - Select _Create_ from the toolbar
+  * 3 - Select _New Page_ from the pop up menu
+  * 4 - Once the page has been created, select _Advanced Settings_ from the _Page_ dropdown menu
+  * 5 - Select _NewsBlog_ from the _Application_ options dropdown menu
 
 ### Creating Blog Posts:
 
