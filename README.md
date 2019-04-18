@@ -1,17 +1,15 @@
 ### Installing the system:
 
 * Simply run setup.sh on the desired machine running an Ubuntu-based Linux Distribution. Accept any necessary prompts.
-
 * Django CMS will prompt the user to create an admin account with password during installation instead of relying on defaults.
 
 
 ### Editing the site:
 
 * Navigate to the site URL and append /admin to reach the admin login. Use the account created during the installing stage to access administration priviledges. 
-
 * The navigation bar across the top of the page makes it easy to reach the tools requiered to add and edit pages.
-
-* Add text, image carousels, embedded videos, and so on, onto a page using the side bar while in edit mode.
+* Add text, image carousels, embedded videos, and so on, onto a page using the content sidebar while in edit mode.
+  * The content sidebar can be called by selecting the icon in the far right of the toolbar
 
 ### Creating an Image Slider
 * To create an image carousel, simply follow these instructions:
@@ -38,7 +36,6 @@
   * The user can schedule a publish time and date for the draft posts 
   * Unpublished posts will have a unpublished banner underlayed beneath the post name on the blog overview page, that is normal. 
   * The published site will not show unpublished posts are not visible to the public, only administrators
-
 * If the user wishes to create a blog post they follow these steps:
   * 1 - Log in as admin
   * 2 - Navigate to blog page
