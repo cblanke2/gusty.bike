@@ -403,7 +403,7 @@ section "Setting up nginx..."
 
 
 # ## Install Mooshak ## #
-    section "Installing mooshak..."
+section "Installing mooshak..."
 
     wget --no-check-certificate "$MOOSHAK_DOWNLOAD_URL"
     java -jar "MooshakInstaller.jar" -cui
@@ -434,7 +434,6 @@ section "Creating Python virtual environment..."
 
 # ## Initialize the project ## #
 section "Initializing djangoCMS website..."
-
 
     if [ ! -d "$WEBSITE_DIR" ]; then
         activate_venv
