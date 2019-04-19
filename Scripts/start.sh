@@ -20,5 +20,5 @@ function deactivate_venv(){
 	set -euo pipefail
 }
 activate_venv
-	python3 python3 "$DJANGO_CMS_DIR/manage.py" runserver
+	python3 "$DJANGO_CMS_DIR/manage.py" runserver
 deactivate_venv
