@@ -380,18 +380,17 @@ cd "$REPO_DIR"
 # ## Install required packages ## #
 section "Installing system packages..."
 
-    # add-apt-repository -y 'ppa:webupd8team/java'
-
-    # apt-get -y autoremove
-    # apt-get -y update
-    # apt-get -y upgrade
-    # apt-get -y install             \
-    #     --upgrade                  \
-    #     'nginx'                    \
-    #     'python3-venv'             \
-    #     'python3-pip'              \
-    #     'oracle-java8-installer'   \
-    #     'oracle-java8-set-default'
+    apt-get -y autoremove
+    apt-get -y update
+    apt-get -y upgrade
+    apt-get -y install             \
+        --upgrade                  \
+        'nginx'                    \
+        'python3-venv'             \
+        'python3-pip'
+        
+    dpkg -i oracle-java8-installer_8u201-1~webupd8~1_all.deb
+    dpkg -i oracle-java8-set-default_8u201-1~webupd8~1_all.deb
 
 
 # ## Setup nginx ## #
