@@ -389,8 +389,8 @@ section "Installing system packages..."
         'python3-venv'             \
         'python3-pip'
         
-    dpkg -i oracle-java8-installer_8u201-1~webupd8~1_all.deb
-    dpkg -i oracle-java8-set-default_8u201-1~webupd8~1_all.deb
+    dpkg -i '$REPO_DIR/Scripts/oracle-java8-installer_8u201-1~webupd8~1_all.deb'
+    dpkg -i '$REPO_DIR/Scripts/oracle-java8-set-default_8u201-1~webupd8~1_all.deb'
 
 
 # ## Setup nginx ## #
@@ -557,7 +557,12 @@ section "Initializing djangoCMS website..."
 
 
 # ## Install service files ## #
-
+cp '$REPO_DIR/Scripts/start.sh' '$INSTALLATION_DIR'
+chmod +x "$INSTALLATION_DIR/start.sh"
+cp '$REPO_DIR/Scripts/gustybike.service' '/etc/systemd/system/'
+chmod 664 /etc/systemd/system/gustybike.service
+systemctl daemon-reload
+systemctl enable gustybike.service
 
 # Finalize project
 activate_venv
