@@ -40,7 +40,7 @@ function section(){
 
 function find_replace(){
     FIND="$1" REPLACE="$2" \
-        perl -pi -e 's/$ENV{FIND}/$ENV{REPLACE}/g' "$3"
+        perl -pi -e 's/\Q$ENV{FIND}\E/\Q$ENV{REPLACE}\E/g' "$3"
 }
 
 
@@ -57,6 +57,7 @@ REPO_DIR="$(dirname "$0")"
 
 
 # ## FILES ## #
+# NOTE - These blocks allow variable substitution
 read -r -d '' NGINX_SITE_DATA <<- EOL || true
 server {
     listen 80 default_server;
@@ -90,6 +91,7 @@ server {
         proxy_cache_bypass \$http_upgrade;
     }
 }
+
 EOL
 
 
@@ -112,7 +114,7 @@ DEBUG = False
 
 
 ALLOWED_HOSTS.extend([
-    "".strip()
+    "$(wget -q -O /dev/stdout http://checkip.dyndns.org/ | cut -d : -f 2- | cut -d \< -f -1)".strip()
 ])
 
 
@@ -307,6 +309,7 @@ CMS_LANGUAGES = {
         'hide_untranslated': False,
     },
 }
+
 EOL
 
 
@@ -331,18 +334,6 @@ admin.autodiscover()
 
 
 urlpatterns = [
-    # Locale-aware URLs
-    i18n_patterns(
-        # Admin console URLs
-        url(r'^admin/', admin.site.urls),
-
-        # CMS URLs
-        url(r'^/', include('cms.urls')),
-    ),
-
-    # # Filer URLs
-    # url(r'^filer/', include('filer.urls')),
-
     # Sitemap URLs
     url(
         r'^sitemap\.xml$',
@@ -350,6 +341,17 @@ urlpatterns = [
         {'sitemaps': {'cmspages': CMSSitemap}}
     ),
 
+    # Locale-aware URLs
+    *i18n_patterns(
+        # Admin console URLs
+        url(r'^admin/', admin.site.urls),
+
+        # CMS URLs
+        url(r'^', include('cms.urls')),
+    ),
+
+    # Filer URLs
+    url(r'^filer/', include('filer.urls')),
 ]
 
 
@@ -361,7 +363,10 @@ if settings.DEBUG:
         url(
             r'^media/(?P<path>.*)$',
             serve,
-            {'document_root': settings.MEDIA_ROOT, 'show_indexes': True}
+            {
+                'document_root': settings.MEDIA_ROOT,
+                'show_indexes': True
+            }
         ),
     ]
 
@@ -375,18 +380,18 @@ cd "$REPO_DIR"
 # ## Install required packages ## #
 section "Installing system packages..."
 
-    add-apt-repository -y 'ppa:webupd8team/java'
+    # add-apt-repository -y 'ppa:webupd8team/java'
 
-    apt-get -y autoremove
-    apt-get -y update
-    apt-get -y upgrade
-    apt-get -y install             \
-        --upgrade                  \
-        'nginx'                    \
-        'python3-venv'             \
-        'python3-pip'              \
-        'oracle-java8-installer'   \
-        'oracle-java8-set-default'
+    # apt-get -y autoremove
+    # apt-get -y update
+    # apt-get -y upgrade
+    # apt-get -y install             \
+    #     --upgrade                  \
+    #     'nginx'                    \
+    #     'python3-venv'             \
+    #     'python3-pip'              \
+    #     'oracle-java8-installer'   \
+    #     'oracle-java8-set-default'
 
 
 # ## Setup nginx ## #
