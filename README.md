@@ -1,6 +1,6 @@
 ### Installing the system:
 
-* Simply run setup.sh on the desired machine running an Ubuntu-based Linux Distribution. Accept any necessary prompts.
+* Simply run setup.sh as root on the desired machine running an Ubuntu-based Linux Distribution. Accept any necessary prompts.
 * Django CMS will prompt the user to create an admin account with password during installation instead of relying on defaults.
 
 
