@@ -562,6 +562,8 @@ cp $REPO_DIR/gustybike.service /etc/systemd/system/
 chmod 664 /etc/systemd/system/gustybike.service
 systemctl daemon-reload
 systemctl enable gustybike.service
+systemctl restart gustybike.service
+
 
 # Finalize project
 activate_venv
@@ -574,5 +576,3 @@ deactivate_venv
 
 
 echo DONE
-
-
