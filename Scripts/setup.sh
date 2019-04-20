@@ -390,8 +390,8 @@ section "Installing system packages..."
         'python3-pip'              \
         'gdebi'
         
-    gdebi $REPO_DIR/Scripts/oracle-java8-installer.deb
-    gdebi $REPO_DIR/Scripts/oracle-java8-set-default.deb
+    gdebi $REPO_DIR/oracle-java8-installer.deb
+    gdebi $REPO_DIR/oracle-java8-set-default.deb
     apt install -f
 
 
