@@ -12,7 +12,7 @@ WEBSITE_NAME="gusty_bike"
 # will be installed into.
 # The path will be created if it doesn't already exist, and the owner will be
 # set to 'www-data'.
-INSTALLATION_DIR="/opt/$WEBSITE_NAME/"
+INSTALLATION_DIR="/opt/$WEBSITE_NAME"
 
 # The file path for the database. May be an abso
 # If this is a relative path, the database will be created/looked for relative
@@ -45,8 +45,8 @@ function find_replace(){
 
 
 # Directory variables
-VIRTENV_DIR="$INSTALLATION_DIR/virtenv/"
-DJANGO_CMS_DIR="$INSTALLATION_DIR/django_cms/"
+VIRTENV_DIR="$INSTALLATION_DIR/virtenv"
+DJANGO_CMS_DIR="$INSTALLATION_DIR/django_cms"
 WEBSITE_DIR="$DJANGO_CMS_DIR/$WEBSITE_NAME"
 
 DOWNLOAD_DIR="$(mktemp -d)"
