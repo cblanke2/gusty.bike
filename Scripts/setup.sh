@@ -556,9 +556,9 @@ section "Initializing djangoCMS website..."
 
 
 # ## Install service files ## #
-cp '$REPO_DIR/start.sh' '$INSTALLATION_DIR'
-chmod +x "$INSTALLATION_DIR/start.sh"
-cp '$REPO_DIR/gustybike.service' '/etc/systemd/system/'
+cp $REPO_DIR/start.sh $INSTALLATION_DIR
+chmod +x $INSTALLATION_DIR/start.sh
+cp $REPO_DIR/gustybike.service /etc/systemd/system/
 chmod 664 /etc/systemd/system/gustybike.service
 systemctl daemon-reload
 systemctl enable gustybike.service
