@@ -4,7 +4,7 @@ Description= Script that initializes the website system on startup.
 [Service]
 Type=simple
 User=root
-ExecStart=/opt/gusty_bike/start.sh
+ExecStart=/bin/bash /opt/gusty_bike/start.sh
 
 
 [Install]
