@@ -389,8 +389,8 @@ section "Installing system packages..."
         'python3-venv'             \
         'python3-pip'
         
-    dpkg -i '$REPO_DIR/Scripts/oracle-java8-installer_8u201-1~webupd8~1_all.deb'
-    dpkg -i '$REPO_DIR/Scripts/oracle-java8-set-default_8u201-1~webupd8~1_all.deb'
+    dpkg -i $REPO_DIR/Scripts/oracle-java8-installer_8u201-1~webupd8~1_all.deb
+    dpkg -i $REPO_DIR/Scripts/oracle-java8-set-default_8u201-1~webupd8~1_all.deb
 
 
 # ## Setup nginx ## #
