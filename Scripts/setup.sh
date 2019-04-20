@@ -387,10 +387,12 @@ section "Installing system packages..."
         --upgrade                  \
         'nginx'                    \
         'python3-venv'             \
-        'python3-pip'
+        'python3-pip'              \
+        'gdebi'
         
-    apt install $REPO_DIR/Scripts/oracle-java8-installer.deb
-    apt install $REPO_DIR/Scripts/oracle-java8-set-default.deb
+    gdebi $REPO_DIR/Scripts/oracle-java8-installer.deb
+    gdebi $REPO_DIR/Scripts/oracle-java8-set-default.deb
+    apt install -f
 
 
 # ## Setup nginx ## #
