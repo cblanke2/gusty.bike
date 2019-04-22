@@ -40,7 +40,7 @@ function section(){
 
 function find_replace(){
     FIND="$1" REPLACE="$2" \
-        perl -pi -e 's/\Q$ENV{FIND}\E/\Q$ENV{REPLACE}\E/g' "$3"
+        perl -pi -e 's/\Q$ENV{FIND}\E/$ENV{REPLACE}/g' "$3"
 }
 
 
