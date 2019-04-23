@@ -1,0 +1,10 @@
+$THIS_FILE_IS_INTERPRETED_USING_BASH
+$ESCAPE_DOLLARS_WHERE_APPROPRIATE
+[Unit]
+Description=gusty.bike socket
+
+[Socket]
+ListenStream=/run/gusty-bike/socket
+
+[Install]
+WantedBy=sockets.target

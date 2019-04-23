@@ -1,0 +1,27 @@
+$THIS_FILE_IS_INTERPRETED_USING_BASH
+$ESCAPE_DOLLARS_WHERE_APPROPRIATE
+[Unit]
+Description=gusty.bike daemon
+Requires=gusty-bike.socket
+After=network.target
+
+[Service]
+User=www-data
+Group=www-data
+
+RuntimeDirectory=gusty-bike
+PIDFile=/run/gusty-bike/pid
+
+WorkingDirectory=/opt/gusty-bike/
+ExecStart=\
+    /usr/bin/gunicorn                      \
+        --pid /run/gusty-bike/pid          \
+        --bind unix:/run/gusty-bike/socket \
+        website.wsgi
+ExecReload=/bin/kill -s HUP $MAINPID
+ExecStop=/bin/kill -s TERM $MAINPID
+
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
