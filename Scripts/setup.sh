@@ -78,7 +78,9 @@ GUNICORN_SETTINGS_FILE="$SCRIPT_DIR/gunicorn-settings.py"
 DJANGO_SETTINGS_FILE="$SCRIPT_DIR/django-settings.py"
 DJANGO_URLS_FILE="$SCRIPT_DIR/django-urls.py"
 
-RUN_DIR="/run/$WEBSITE_NAME/"
+RUNFILES_DIR="/run/$WEBSITE_NAME/"
+PID_FILE="$RUNFILES_DIR/pid"
+SOCKET_FILE="$RUNFILES_DIR/socket"
 
 VIRTENV_DIR="$INSTALLATION_DIR/virtenv"
 DJANGO_CMS_DIR="$INSTALLATION_DIR/django_cms"
@@ -280,8 +282,10 @@ section "Initializing djangoCMS website..."
 # ## Install service files ## #
 cp $SCRIPT_DIR/start.sh $INSTALLATION_DIR
 chmod +x $INSTALLATION_DIR/start.sh
-cp $SCRIPT_DIR/gustybike.service /etc/systemd/system/
+
+cp $SCRIPT_DIR/website.service /etc/systemd/system/
 chmod 664 /etc/systemd/system/gustybike.service
+
 systemctl daemon-reload
 systemctl enable gustybike.service
 systemctl restart gustybike.service
