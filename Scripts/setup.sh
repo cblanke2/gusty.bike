@@ -191,7 +191,7 @@ section "Initializing djangoCMS website..."
 
             # Initialize the Django project
                 mkdir -p "$DJANGO_CMS_DIR"
-                django-admin.py startproject "$WEBSITE_NAME" "$DJANGO_CMS_DIR"
+                django-admin.py startproject "website" "$DJANGO_CMS_DIR"
                 mkdir -p "$WEBSITE_DIR/templates"
                 mkdir -p "$WEBSITE_DIR/static"
 
