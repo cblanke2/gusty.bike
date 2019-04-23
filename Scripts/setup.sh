@@ -71,8 +71,8 @@ SCRIPT_DIR="$(
 NGINX_SITE_FILE="$SCRIPT_DIR/nginx.site"
 DAEMON_UNIT_FILE="$SCRIPT_DIR/website.service"
 DAEMON_SOCKET_FILE="$SCRIPT_DIR/website.socket"
-GUNICORN_CONF_FILE="$SCRIPT_DIR/gunicorn-settings.py"
-DJANGO_CONF_FILE="$SCRIPT_DIR/django-settings.py"
+GUNICORN_SETTINGS_FILE="$SCRIPT_DIR/gunicorn-settings.py"
+DJANGO_SETTINGS_FILE="$SCRIPT_DIR/django-settings.py"
 
 RUN_DIR="/run/$WEBSITE_NAME/"
 
