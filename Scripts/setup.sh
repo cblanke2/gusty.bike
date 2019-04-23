@@ -283,12 +283,22 @@ section "Initializing djangoCMS website..."
 cp $SCRIPT_DIR/start.sh $INSTALLATION_DIR
 chmod +x $INSTALLATION_DIR/start.sh
 
-cp $SCRIPT_DIR/website.service /etc/systemd/system/
-chmod 664 /etc/systemd/system/gustybike.service
+
+# systemd files
+cp "$DAEMON_UNIT_FILE" "/etc/systemd/system/$WEBSITE_NAME.service"
+chmod 664 "/etc/systemd/system/$WEBSITE_NAME.service"
+
+cp "$DAEMON_SOCKET_FILE" "/etc/systemd/system/$WEBSITE_NAME.service"
+chmod 664 "/etc/systemd/system/$WEBSITE_NAME.service"
+
+
+# gunicorn files
+cp "$GUNICORN_SETTINGS_FILE" "$WEBSITE_DIR/gunicorn-settings.py"
+
 
 systemctl daemon-reload
-systemctl enable gustybike.service
-systemctl restart gustybike.service
+systemctl enable "$WEBSITE_NAME.service"
+systemctl restart "$WEBSITE_NAME.service"
 
 
 # Finalize project
