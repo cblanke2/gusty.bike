@@ -285,11 +285,13 @@ chmod +x $INSTALLATION_DIR/start.sh
 
 
 # systemd files
-cp "$DAEMON_UNIT_FILE" "/etc/systemd/system/$WEBSITE_NAME.service"
+apply_shell_expansion "$DAEMON_UNIT_FILE" \
+    > "/etc/systemd/system/$WEBSITE_NAME.service"
 chmod 664 "/etc/systemd/system/$WEBSITE_NAME.service"
 
-cp "$DAEMON_SOCKET_FILE" "/etc/systemd/system/$WEBSITE_NAME.service"
-chmod 664 "/etc/systemd/system/$WEBSITE_NAME.service"
+apply_shell_expansion "$DAEMON_SOCKET_FILE" \
+    > "/etc/systemd/system/$WEBSITE_NAME.socket"
+chmod 664 "/etc/systemd/system/$WEBSITE_NAME.socket"
 
 
 # gunicorn files
