@@ -76,6 +76,7 @@ DAEMON_UNIT_FILE="$SCRIPT_DIR/website.service"
 DAEMON_SOCKET_FILE="$SCRIPT_DIR/website.socket"
 GUNICORN_SETTINGS_FILE="$SCRIPT_DIR/gunicorn-settings.py"
 DJANGO_SETTINGS_FILE="$SCRIPT_DIR/django-settings.py"
+DJANGO_URLS_FILE="$SCRIPT_DIR/django-urls.py"
 
 RUN_DIR="/run/$WEBSITE_NAME/"
 
