@@ -4,9 +4,8 @@ set -euo pipefail # Enable 'strict' mode
 
 # ## CONFIGURATION VARIABLES ## #
 
-# Used to determine the name of the Django project, as well as the name of the
-# installation directory.
-WEBSITE_NAME="gusty_bike"
+# Used to determine the name of the installation directory.
+WEBSITE_NAME="gusty-bike"
 
 # The directory that the Django site, virtual environment, and static resources
 # will be installed into.
@@ -23,13 +22,24 @@ DATABASE_FILE="db.sqlite"
 MOOSHAK_DOWNLOAD_URL='http://mooshak2.dcc.fc.up.pt/install/MooshakInstaller.jar'
 
 # The URL to download the Bootstrap 4 templates for Aldryn NewsBlog from.
+# The target of the URL is expected to be a zip file containing directories
+# named "templates" and "static".
+# Other directories may exist, however they will not be copied over
+# to the website's project directory.
 BLOG_BOILERPLATE_URL='https://github.com/johnfraney/aldryn-newsblog/archive/bootstrap4-boilerplate.zip'
 
 # The URL to download the Bootstrap 4 templates for the CMS from.
+# The target of the URL is expected to be a zip file containing directories
+# named "templates" and "static".
+# Other directories and files may exist, however they will not be copied over
+# to the website's project directory.
 CMS_BOILERPLATE_URL='https://github.com/divio/djangocms-boilerplate-bootstrap4/archive/master.zip'
 
-# The CMS theme file.
+# The CMS theme file. This is expected to be a CSS file that can be used in
+# place of the default bootstrap.min.css file.
 CMS_THEME_URL='https://bootswatch.com/4/united/bootstrap.min.css'
+
+# ## END CONFIGURATION VARIABLES ## #
 
 
 # Utility functions
@@ -43,338 +53,46 @@ function find_replace(){
         perl -pi -e 's/\Q$ENV{FIND}\E/$ENV{REPLACE}/g' "$3"
 }
 
+function apply_shell_expansion(){
+    file="$1"
+    data=$(< "$file")
+    delimiter="__apply_shell_expansion_delimiter__"
+    command="cat <<$delimiter"$'\n'"$data"$'\n'"$delimiter"
+    eval "$command"
+}
+
 
 # Directory variables
+SCRIPT_DIR="$(
+    cd "$( dirname "${BASH_SOURCE[0]}" )"
+    >/dev/null 2>&1 && pwd
+)"
+
+NGINX_SITE_FILE="$SCRIPT_DIR/nginx.site"
+DAEMON_UNIT_FILE="$SCRIPT_DIR/website.service"
+DAEMON_SOCKET_FILE="$SCRIPT_DIR/website.socket"
+GUNICORN_CONF_FILE="$SCRIPT_DIR/gunicorn-settings.py"
+DJANGO_CONF_FILE="$SCRIPT_DIR/django-settings.py"
+
+RUN_DIR="/run/$WEBSITE_NAME/"
+
 VIRTENV_DIR="$INSTALLATION_DIR/virtenv"
 DJANGO_CMS_DIR="$INSTALLATION_DIR/django_cms"
-WEBSITE_DIR="$DJANGO_CMS_DIR/$WEBSITE_NAME"
+WEBSITE_DIR="$DJANGO_CMS_DIR/website"
 
 DOWNLOAD_DIR="$(mktemp -d)"
 CMS_BOILERPLATE_DIR="$(mktemp -d)"
 BLOG_BOILERPLATE_DIR="$(mktemp -d)"
 
-REPO_DIR="$(dirname "$0")"
 
-
-# ## FILES ## #
-# NOTE - These blocks allow variable substitution
-read -r -d '' NGINX_SITE_DATA <<- EOL || true
-server {
-    listen 80 default_server;
-    listen [::]:80 default_server;
-
-    root /var/www/html;
-
-    server_name gusty.bike;
-
-    location /static {
-        root $DJANGO_CMS_DIR;
-    }
-
-    location /media {
-        root $DJANGO_CMS_DIR;
-    }
-
-    location / {
-        proxy_pass http://localhost:8000/;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade \$http_upgrade;
-        proxy_set_header Host \$host;
-        proxy_cache_bypass \$http_upgrade;
-    }
-
-    location /mooshak {
-        proxy_pass http://localhost:8180/mooshak;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade \$http_upgrade;
-        proxy_set_header Host \$host;
-        proxy_cache_bypass \$http_upgrade;
-    }
-}
-
-EOL
-
-
-read -r -d '' DJANGO_SETTINGS_DATA <<- EOL || true
-import os
-from os.path import (
-    join as join_path,
-    dirname
-)
-
-
-# NOTE - This will "include" the original settings file in this one.
-exec(open(dirname(__file__) +  '/base_settings.py').read())
-
-
-# SECURITY WARNING: don't run with debug turned on in production!
-# Otherwise arbitrary users will be able to view settings, etc when
-# encountering 404 errors, etc.
-DEBUG = False
-
-
-ALLOWED_HOSTS.extend([
-    "$(wget -q -O /dev/stdout http://checkip.dyndns.org/ | cut -d : -f 2- | cut -d \< -f -1)".strip()
-])
-
-
-# Enabled Applications/Plugins
-# Note that order can matter!
-INSTALLED_APPS = [
-    'djangocms_admin_style',
-
-    *INSTALLED_APPS,
-
-    # Core CMS Applications
-    'cms',
-    'django.contrib.sites',
-    'menus',
-    'treebeard',
-
-    # Misc Requirements
-    'bootstrap4',
-    'easy_thumbnails',
-    'filer',
-    'parler',
-    'sekizai',
-    'sortedm2m',
-    'taggit',
-
-    # Secondary CMS Applications
-    'djangocms_column',
-    'djangocms_file',
-    'djangocms_googlemap',
-    'djangocms_icon',
-    'djangocms_link',
-    'djangocms_modules',
-    'djangocms_history',
-    'djangocms_picture',
-    'djangocms_snippet',
-    'djangocms_style',
-    'djangocms_text_ckeditor',
-    'djangocms_video',
-
-    # Bootstrap 4 Support
-    'djangocms_bootstrap4',
-    'djangocms_bootstrap4.contrib.bootstrap4_alerts',
-    'djangocms_bootstrap4.contrib.bootstrap4_badge',
-    'djangocms_bootstrap4.contrib.bootstrap4_card',
-    'djangocms_bootstrap4.contrib.bootstrap4_carousel',
-    'djangocms_bootstrap4.contrib.bootstrap4_collapse',
-    'djangocms_bootstrap4.contrib.bootstrap4_content',
-    'djangocms_bootstrap4.contrib.bootstrap4_grid',
-    'djangocms_bootstrap4.contrib.bootstrap4_jumbotron',
-    'djangocms_bootstrap4.contrib.bootstrap4_link',
-    'djangocms_bootstrap4.contrib.bootstrap4_listgroup',
-    'djangocms_bootstrap4.contrib.bootstrap4_media',
-    'djangocms_bootstrap4.contrib.bootstrap4_picture',
-    'djangocms_bootstrap4.contrib.bootstrap4_tabs',
-    'djangocms_bootstrap4.contrib.bootstrap4_utilities',
-
-    # Blog Support
-    'aldryn_apphooks_config',
-    'aldryn_categories',
-    'aldryn_common',
-    'aldryn_newsblog',
-    'aldryn_people',
-    'aldryn_translation_tools',
-
-    # Core Site
-    '$WEBSITE_NAME'
-]
-
-
-# Enabled Middleware.
-# Note that order can matter!
-MIDDLEWARE = [
-    *MIDDLEWARE,
-
-    'django.middleware.locale.LocaleMiddleware',
-    'cms.middleware.user.CurrentUserMiddleware',
-    'cms.middleware.page.CurrentPageMiddleware',
-    'cms.middleware.toolbar.ToolbarMiddleware',
-    'cms.middleware.language.LanguageCookieMiddleware',
-    'cms.middleware.utils.ApphookReloadMiddleware',
-
-]
-
-
-# Template Engines Settings
-# NOTE - This assumes that a single template engine is configured.
-TEMPLATES[0]['DIRS'] = [
-    *TEMPLATES[0].get('DIRS', []),
-
-    join_path(BASE_DIR, '$WEBSITE_NAME', 'templates'),
-]
-
-TEMPLATES[0]['OPTIONS']['context_processors'] = [
-    *TEMPLATES[0]['OPTIONS'].get('context_processors', []),
-
-    'django.template.context_processors.i18n',
-    'django.template.context_processors.media',
-    'django.template.context_processors.csrf',
-    'django.template.context_processors.tz',
-    'django.template.context_processors.static',
-
-    'cms.context_processors.cms_settings',
-
-    'sekizai.context_processors.sekizai',
-]
-
-
-del TEMPLATES[0]['APP_DIRS']
-TEMPLATES[0]['OPTIONS']['loaders'] = [
-    *TEMPLATES[0]['OPTIONS'].get('loaders', []),
-
-    'django.template.loaders.filesystem.Loader',
-    'django.template.loaders.app_directories.Loader',
-]
-
-
-# ## Language / Time Settings ## #
-LANGUAGE_CODE = 'en'
-LANGUAGES = [
-    ('en', 'English'),
-]
-
-TIME_ZONE = 'US/Eastern'
-
-USE_I18N = True
-USE_L10N = True
-USE_TZ = True
-
-
-# ## Database Settings ## #
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, "$DATABASE_FILE"),
-    }
-}
-
-
-# ## Static Files Settings ## #
-DATA_DIR = dirname(dirname(__file__))
-STATIC_URL  = '/static/'
-MEDIA_URL   = '/media/'
-MEDIA_ROOT  = os.path.join(DATA_DIR, 'media')
-STATIC_ROOT = os.path.join(DATA_DIR, 'static')
-
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, '$WEBSITE_NAME', 'static'),
-)
-
-
-# ## easy_thumbnail Settings ## #
-THUMBNAIL_PROCESSORS = (
-    'easy_thumbnails.processors.colorspace',
-    'easy_thumbnails.processors.autocrop',
-    'filer.thumbnail_processors.scale_and_crop_with_subject_location',
-    'easy_thumbnails.processors.filters',
-    'easy_thumbnails.processors.background'
-)
-
-
-# ## News/Blog Settings ## #
-ALDRYN_NEWSBLOG_UPDATE_SEARCH_DATA_ON_SAVE = True
-
-
-# ## CMS settings ## #
-SITE_ID = 1
-
-CMS_PERMISSION = True
-
-CMS_TEMPLATES = [
-    ## Customize this when using other templates.
-    ("content.html", "content")
-]
-
-
-# Before uncommenting this, be sure to read the documentation at
-# http://docs.django-cms.org/en/latest/reference/configuration.html#cms-languages
-gettext = lambda s: s
-CMS_LANGUAGES = {
-    1: [
-        {
-            'code': 'en',
-            'name': gettext('en'),
-            'redirect_on_fallback': True,
-            'public': True,
-            'hide_untranslated': False,
-        },
-    ],
-    'default': {
-        'redirect_on_fallback': True,
-        'public': True,
-        'hide_untranslated': False,
-    },
-}
-
-EOL
-
-
-read -r -d '' DJANGO_URLS_DATA <<- EOL || true
-import os
-
-from cms.sitemaps import CMSSitemap
-
-from django.conf import settings
-from django.conf.urls import include, url
-from django.conf.urls.i18n import i18n_patterns
-from django.contrib import admin
-from django.contrib.sitemaps.views import sitemap
-from django.contrib.staticfiles.urls import staticfiles_urlpatterns
-from django.views.static import serve
-
-
-exec(open(os.path.dirname(__file__) +  '/base_urls.py').read())
-
-
-admin.autodiscover()
-
-
-urlpatterns = [
-    # Sitemap URLs
-    url(
-        r'^sitemap\.xml$',
-        sitemap,
-        {'sitemaps': {'cmspages': CMSSitemap}}
-    ),
-
-    # Locale-aware URLs
-    *i18n_patterns(
-        # Admin console URLs
-        url(r'^admin/', admin.site.urls),
-
-        # CMS URLs
-        url(r'^', include('cms.urls')),
-    ),
-
-    # Filer URLs
-    url(r'^filer/', include('filer.urls')),
-]
-
-
-# This is only needed when using runserver.
-if settings.DEBUG:
-    urlpatterns = [
-        *urlpatterns,
-        *staticfiles_urlpatterns(),
-        url(
-            r'^media/(?P<path>.*)$',
-            serve,
-            {
-                'document_root': settings.MEDIA_ROOT,
-                'show_indexes': True
-            }
-        ),
-    ]
-
-EOL
+# ## File Data ## #
+NGINX_SITE_DATA="$(apply_shell_expansion "$NGINX_SITE_FILE")"
+DJANGO_SETTINGS_DATA="$(apply_shell_expansion "$DJANGO_SETTINGS_FILE")"
+DJANGO_URLS_DATA="$(apply_shell_expansion "$DJANGO_URLS_FILE")"
 
 
 # ## Prepare Setup Environment ## #
-cd "$REPO_DIR"
+cd "$SCRIPT_DIR"
 
 
 # ## Install required packages ## #
@@ -556,9 +274,9 @@ section "Initializing djangoCMS website..."
 
 
 # ## Install service files ## #
-cp $REPO_DIR/start.sh $INSTALLATION_DIR
+cp $SCRIPT_DIR/start.sh $INSTALLATION_DIR
 chmod +x $INSTALLATION_DIR/start.sh
-cp $REPO_DIR/gustybike.service /etc/systemd/system/
+cp $SCRIPT_DIR/gustybike.service /etc/systemd/system/
 chmod 664 /etc/systemd/system/gustybike.service
 systemctl daemon-reload
 systemctl enable gustybike.service
