@@ -54,6 +54,9 @@ function find_replace(){
 }
 
 function apply_shell_expansion(){
+    THIS_FILE_IS_INTERPRETED_USING_BASH=''
+    ESCAPE_DOLLARS_WHERE_APPROPRIATE=''
+
     file="$1"
     data=$(< "$file")
     delimiter="__apply_shell_expansion_delimiter__"
