@@ -1,0 +1,11 @@
+$THIS_FILE_IS_INTERPRETED_USING_BASH
+$ESCAPE_DOLLARS_WHERE_APPROPRIATE
+[Unit]
+Description=$WEBSITE_NAME socket
+PartOf=$WEBSITE_PATH_NAME.service
+
+[Socket]
+ListenStream=$SOCKET_FILE
+
+[Install]
+WantedBy=sockets.target
