@@ -320,3 +320,4 @@ deactivate_venv
 
 
 echo DONE
+echo "Run 'sudo systemctl restart $WEBSITE_PATH_NAME.service nginx.service' to start the webserver."
