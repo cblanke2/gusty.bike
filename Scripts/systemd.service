@@ -2,14 +2,14 @@ $THIS_FILE_IS_INTERPRETED_USING_BASH
 $ESCAPE_DOLLARS_WHERE_APPROPRIATE
 [Unit]
 Description=$WEBSITE_NAME daemon
-Requires=$WEBSITE_NAME.socket
+Requires=$WEBSITE_PATH_NAME.socket
 After=network.target
 
 [Service]
 User=www-data
 Group=www-data
 
-RuntimeDirectory=$WEBSITE_NAME
+RuntimeDirectory=$WEBSITE_PATH_NAME
 PIDFile=$PID_FILE
 
 WorkingDirectory=$DJANGO_CMS_DIR

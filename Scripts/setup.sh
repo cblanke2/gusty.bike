@@ -4,14 +4,17 @@ set -euo pipefail # Enable 'strict' mode
 
 # ## CONFIGURATION VARIABLES ## #
 
-# Used to determine the name of the installation directory.
-WEBSITE_NAME="gusty-bike"
+# The domain name of the website.
+# This is used in certain configuration files, and paths to determine directory
+# names.
+WEBSITE_NAME="gusty.bike"
+WEBSITE_PATH_NAME="$(echo "$WEBSITE_NAME" | sed "s|\.|-|g")"
 
 # The directory that the Django site, virtual environment, and static resources
 # will be installed into.
 # The path will be created if it doesn't already exist, and the owner will be
 # set to 'www-data'.
-INSTALLATION_DIR="/opt/$WEBSITE_NAME"
+INSTALLATION_DIR="/opt/$WEBSITE_PATH_NAME"
 
 # The file path for the database. May be an abso
 # If this is a relative path, the database will be created/looked for relative
@@ -71,14 +74,14 @@ SCRIPT_DIR="$(
     >/dev/null 2>&1 && pwd
 )"
 
-NGINX_SITE_FILE="$SCRIPT_DIR/nginx.site"
-DAEMON_UNIT_FILE="$SCRIPT_DIR/website.service"
-DAEMON_SOCKET_FILE="$SCRIPT_DIR/website.socket"
+NGINX_SITE_FILE="$SCRIPT_DIR/nginx-site.conf"
+DAEMON_UNIT_FILE="$SCRIPT_DIR/systemd.service"
+DAEMON_SOCKET_FILE="$SCRIPT_DIR/systemd.socket"
 GUNICORN_SETTINGS_FILE="$SCRIPT_DIR/gunicorn-settings.py"
 DJANGO_SETTINGS_FILE="$SCRIPT_DIR/django-settings.py"
 DJANGO_URLS_FILE="$SCRIPT_DIR/django-urls.py"
 
-RUNFILES_DIR="/run/$WEBSITE_NAME/"
+RUNFILES_DIR="/run/$WEBSITE_PATH_NAME/"
 PID_FILE="$RUNFILES_DIR/pid"
 SOCKET_FILE="$RUNFILES_DIR/socket"
 
@@ -286,12 +289,12 @@ chmod +x $INSTALLATION_DIR/start.sh
 
 # systemd files
 apply_shell_expansion "$DAEMON_UNIT_FILE" \
-    > "/etc/systemd/system/$WEBSITE_NAME.service"
-chmod 664 "/etc/systemd/system/$WEBSITE_NAME.service"
+    > "/etc/systemd/system/$WEBSITE_PATH_NAME.service"
+chmod 664 "/etc/systemd/system/$WEBSITE_PATH_NAME.service"
 
 apply_shell_expansion "$DAEMON_SOCKET_FILE" \
-    > "/etc/systemd/system/$WEBSITE_NAME.socket"
-chmod 664 "/etc/systemd/system/$WEBSITE_NAME.socket"
+    > "/etc/systemd/system/$WEBSITE_PATH_NAME.socket"
+chmod 664 "/etc/systemd/system/$WEBSITE_PATH_NAME.socket"
 
 
 # gunicorn files
@@ -299,8 +302,8 @@ cp "$GUNICORN_SETTINGS_FILE" "$WEBSITE_DIR/gunicorn-settings.py"
 
 
 systemctl daemon-reload
-systemctl enable "$WEBSITE_NAME.service"
-systemctl restart "$WEBSITE_NAME.service"
+systemctl enable "$WEBSITE_PATH_NAME.service"
+systemctl restart "$WEBSITE_PATH_NAME.service"
 
 
 # Finalize project
