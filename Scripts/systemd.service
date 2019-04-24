@@ -14,10 +14,10 @@ PIDFile=$PID_FILE
 
 WorkingDirectory=$DJANGO_CMS_DIR
 ExecStart=\
-    /usr/bin/gunicorn              \
-        --pid "$PID_FILE"          \
-        --bind "unix:$SOCKET_FILE" \
-        --config "$WEBSITE_DIR/gunicorn-settings.py"  \
+    $VIRTENV_DIR/bin/gunicorn      \\
+        --pid "$PID_FILE"          \\
+        --bind "unix:$SOCKET_FILE" \\
+        --config "$WEBSITE_DIR/gunicorn-settings.py"  \\
         website.wsgi
 ExecReload=/bin/kill -s HUP \$MAINPID
 ExecStop=/bin/kill -s TERM \$MAINPID
