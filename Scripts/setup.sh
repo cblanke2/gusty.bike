@@ -290,15 +290,17 @@ chmod +x $INSTALLATION_DIR/start.sh
 # systemd files
 apply_shell_expansion "$DAEMON_UNIT_FILE" \
     > "/etc/systemd/system/$WEBSITE_PATH_NAME.service"
-chmod 664 "/etc/systemd/system/$WEBSITE_PATH_NAME.service"
+chmod 660 "/etc/systemd/system/$WEBSITE_PATH_NAME.service"
 
 apply_shell_expansion "$DAEMON_SOCKET_FILE" \
     > "/etc/systemd/system/$WEBSITE_PATH_NAME.socket"
-chmod 664 "/etc/systemd/system/$WEBSITE_PATH_NAME.socket"
+chmod 660 "/etc/systemd/system/$WEBSITE_PATH_NAME.socket"
 
 
 # gunicorn files
-cp "$GUNICORN_SETTINGS_FILE" "$WEBSITE_DIR/gunicorn-settings.py"
+apply_shell_expansion "$GUNICORN_SETTINGS_FILE" \
+    > "$WEBSITE_DIR/gunicorn-settings.py"
+chmod 660 "$WEBSITE_DIR/gunicorn-settings.py"
 
 
 systemctl daemon-reload
@@ -313,6 +315,7 @@ activate_venv
     python3 "$DJANGO_CMS_DIR/manage.py" migrate
     python3 "$DJANGO_CMS_DIR/manage.py" createsuperuser --username admin
     chown -R www-data:www-data "$INSTALLATION_DIR"
+    chmod -R o-rwx /opt/gusty-bike/
 deactivate_venv
 
 
