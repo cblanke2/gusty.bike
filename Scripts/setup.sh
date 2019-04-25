@@ -117,6 +117,7 @@ section "Installing system packages..."
         'python3-pip'              \
         'openjdk-8-jdk'            \
         'openjdk-8-jre'            \
+        'unzip'                    \
 
 
 # ## Setup nginx ## #
